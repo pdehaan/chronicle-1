@@ -14,21 +14,60 @@ var conn = mysql.createConnection({
   password: config.get('db.mysql.password')
 });
 
+var dropDatabaseQuery = 'DROP DATABASE IF EXISTS chronicle';
+var createDatabaseQuery = 'CREATE DATABASE IF NOT EXISTS chronicle ' +
+  'CHARACTER SET utf8 COLLATE utf8_unicode_ci';
+var useDatabaseQuery = 'USE chronicle';
+var createTableQuery = 'CREATE TABLE IF NOT EXISTS users (' +
+  'fxa_id BINARY(16) NOT NULL PRIMARY KEY,' +
+  'email VARCHAR(256) NOT NULL,' +
+  'oauth_token BINARY(32),' +  // can we assume this will be true? TODO
+  'createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,' +
+  'updatedAt TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,' +
+  'INDEX (email)' +
+  ') ENGINE=InnoDB CHARACTER SET utf8 COLLATE utf8_unicode_ci;';
+
 conn.connect(function(err) {
   if (err) {
     return log.warn('error connecting to mysql: ' + err);
   }
   log.info('connected to mysql as id ' + conn.threadId);
-});
+  
+  // TODO use promises for prettier chaining
+  log.info('dropping any existing database');
+  conn.query(dropDatabaseQuery, function(err) {
+    if (err) {
+      log.warn('error dropping database: ' + err);
+    }
+    log.info('old database dropped.')
+    log.info('creating chronicle database');
+    conn.query(createDatabaseQuery, function(err) {
+      if (err) {
+        log.warn('error creating database: ' + err);
+      }
+      log.info('database successfully created');
+      conn.query(useDatabaseQuery, function(err) {
+        if (err) {
+          log.warn('error using database: ' + err);
+        }
+        log.info('now using database');
 
-// TODO use promises for prettier chaining
-
-// do stuff.....
-conn.end(function(err) {
-  if (err) {
-    log.warn('error ending mysql connection: ' + err);
-    log.warn('resorting to connection.destroy to end this session');
-    conn.destroy();
-  }
-  log.info('mysql connection closed.');
+        log.info('creating user table');
+        conn.query(createTableQuery, function(err) {
+          if (err) {
+            log.warn('error creating user table: ' + err);
+          }
+          log.info('user table successfully created');
+          conn.end(function(err) {
+            if (err) {
+              log.warn('error ending mysql connection: ' + err);
+              log.warn('resorting to connection.destroy to end this session');
+              conn.destroy();
+            }
+            log.info('mysql connection closed.');
+          });
+        });
+      });
+    });
+  });
 });
