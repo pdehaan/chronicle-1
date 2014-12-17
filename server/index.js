@@ -7,6 +7,8 @@
 var Hapi = require('hapi');
 var server = new Hapi.Server();
 var config = require('./config').root();
+var log = require('./logger')('server.index');
+
 server.connection({
   host: config.server.host,
   port: config.server.port
@@ -21,6 +23,6 @@ server.route({
     }
   }
 });
-server.start(function () {
-  console.log('chronicle server running on port ' + config.server.port);
+server.start(function(err) {
+  log.info('chronicle server running on port ' + config.server.port);
 });
