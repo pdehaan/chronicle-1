@@ -19,7 +19,7 @@
   "server": {
     "log": {
       "app": "chronicle",
-      "debug": true,
+      "debug": false,
       "fmt": "pretty",
       "level": "verbose"
     },
