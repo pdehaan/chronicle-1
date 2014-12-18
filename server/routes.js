@@ -2,29 +2,33 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+'use strict';
+
+var config = require('./config');
+
 module.exports = [{
   method: 'GET',
   path: '/',
   config: {
     auth: 'session',
-    handler: function(request, reply) {
+    handler: function (request, reply) {
       var page = request.auth.isAuthenticated ? 'app.html' : 'index.html';
       reply.file(page);
     }
   }
 }, {
   method: 'GET',
-  path: 'auth/logout',
-  handler: function(request, reply) {
+  path: '/auth/logout',
+  handler: function (request, reply) {
     request.auth.session.clear();
     return reply.redirect('/');
   }
 }, {
   method: 'GET',
-  path: 'auth/complete',
+  path: '/auth/complete',
   config: {
     auth: 'oauth',
-    handler: function(request, reply) {
+    handler: function (request, reply) {
       // TODO: bell did the oauth thing for us. assume it's in the request.
       // next, hit the profile server to get the fxa_uid, email, name, avatar.
       // finally, set the fxa_uid in the cookie,

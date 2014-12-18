@@ -5,7 +5,8 @@
 'use strict';
 
 var Hapi = require('hapi');
-var config = require('./config').root();
+var path = require('path');
+var config = require('./config');
 var log = require('./logger')('server.index');
 var routes = require('./routes');
 
@@ -13,7 +14,7 @@ var server = new Hapi.Server({
   connections: {
     routes: {
       files: {
-        relativeTo: Path.join(__dirname, '../', config.server.get('server.staticPath'))
+        relativeTo: path.join(__dirname, '../', config.get('server.staticPath'))
       }
     }
   }
@@ -23,9 +24,7 @@ server.connection({
   port: config.get('server.port')
 });
 
-server.route(routes);
-
-server.register([require('hapi-auth-cookie'), require('bell')], function(err) {
+server.register([require('hapi-auth-cookie'), require('bell')], function (err) {
   if (err) {
     log.warn('failed to load plugin: ' + err);
     throw err; // TODO: should we use AppError instead?
@@ -46,8 +45,9 @@ server.register([require('hapi-auth-cookie'), require('bell')], function(err) {
       auth: 'TODO: the auth endpoint URI',
       token: 'TODO: the access token endpoint URI',
       version: '2.0',
-      scope: 'profile', // or is it 'chronicle'?
-      profile: function(credentials, params, get, profileCb) {
+      scope: ['profile'], // or is it 'chronicle'?
+      /*jshint unused:false */
+      profile: function (credentials, params, get, profileCb) {
         // TODO here's a guess at what to do in here, bell provides no example:
         // 1. grab params.token, send it to the profile endpoint
         // 2. put the profile response into the credentials object, then send it to DB
@@ -59,11 +59,12 @@ server.register([require('hapi-auth-cookie'), require('bell')], function(err) {
     isSecure: config.get('server.session.isSecure')
   });
 
-  server.start(function(err) {
+  server.route(routes);
+  server.start(function (err) {
     if (err) {
       log.warn('server failed to start: ' + err);
       throw err; // TODO: should we fail to start in some other way? AppError?
     }
-    log.info('chronicle server running on port ' + config.server.port);
+    log.info('chronicle server running on port ' + config.get('server.port'));
   });
 });
