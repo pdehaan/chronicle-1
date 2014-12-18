@@ -8,7 +8,7 @@ var fs = require('fs');
 var path = require('path');
 
 var convict = require('convict');
-const SEVEN_DAYS_IN_MSEC = 1000 * 60 * 60 * 24 * 7;
+var SEVEN_DAYS_IN_MSEC = 1000 * 60 * 60 * 24 * 7;
 
 var conf = convict({
   env: {
