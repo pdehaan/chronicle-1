@@ -32,6 +32,8 @@
       "scope": "profile",
       "oauth_uri": "https://oauth-latest.dev.lcip.org/v1",
       "profile_uri": "https://latest.dev.lcip.org/profile/v1"
-    }
+    },
+    "staticPath": "app",
+    "staticDirListing": true
   }
 }

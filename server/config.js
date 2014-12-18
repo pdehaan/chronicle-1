@@ -6,6 +6,7 @@ var fs = require('fs');
 var path = require('path');
 
 var convict = require('convict');
+const SEVEN_DAYS_IN_MSEC = 1000 * 60 * 60 * 24 * 7;
 
 var conf = convict({
   env: {
@@ -87,8 +88,42 @@ var conf = convict({
     },
     staticPath: {
       doc: 'Path to static files.',
-      default: 'app',
+      default: 'dist',
       env: 'STATIC_PATH'
+    },
+    staticDirListing: {
+      doc: 'Whether to allow directory listings for static dirs.',
+      default: false,
+      env: 'STATIC_DIR_LISTING'
+    },
+    oauth: {
+      clientId: {
+        doc: 'Firefox Accounts client_id.',
+        default: '5901bd09376fadaa',
+        env: 'FXA_OAUTH_CLIENT_ID'
+      },
+      clientSecret: {
+        doc: 'Firefox Accounts OAuth client_secret.',
+        default: '4ab433e31ef3a7cf7c20590f047987922b5c9ceb1faff56f0f8164df053dd94c',
+        env: 'FXA_OAUTH_CLIENT_SECRET'
+      }
+    },
+    session: {
+      password: {
+        doc: 'Password used to encrypt cookies with hueniverse-iron.',
+        default: 'S3kr1t',
+        env: 'SESSION_PASSWORD'
+      },
+      isSecure: {
+        doc: 'Whether to allow cookie to be transmitted over insecure connections.',
+        default: false,
+        env: 'ALLOW_HTTP_COOKIES'
+      },
+      duration: {
+        doc: 'Default session TTL for authenticated users.',
+        default: SEVEN_DAYS_IN_MSEC,
+        env: 'SESSION_DURATION'
+      }
     }
   }
 });
