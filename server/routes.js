@@ -14,14 +14,14 @@ module.exports = [{
   }
 }, {
   method: 'GET',
-  path: 'v1/auth/logout',
+  path: 'auth/logout',
   handler: function(request, reply) {
     request.auth.session.clear();
     return reply.redirect('/');
   }
 }, {
   method: 'GET',
-  path: 'v1/auth/complete',
+  path: 'auth/complete',
   config: {
     auth: 'oauth',
     handler: function(request, reply) {
@@ -32,8 +32,9 @@ module.exports = [{
       var sessionData = {
         fxaId: '6d940dd41e636cc156074109b8092f96'
       };
-      reply().state('session', sessionData);
-      // TODO is this correct? or do we need to do request.auth.session.ttl(ttl) ?
+      reply()
+        .state('session', sessionData)
+        .redirect('/'); //redirect home, then we'll load the logged-in view
     }
   }
 }, {
