@@ -108,6 +108,31 @@ var conf = convict({
         doc: 'Firefox Accounts OAuth client_secret.',
         default: '4ab433e31ef3a7cf7c20590f047987922b5c9ceb1faff56f0f8164df053dd94c',
         env: 'FXA_OAUTH_CLIENT_SECRET'
+      },
+      scope: {
+        doc: 'Application scope. Currently not checked by the auth server.',
+        default: ['chronicle'],
+        env: 'FXA_OAUTH_SCOPE'
+      },
+      version: {
+        doc: 'OAuth version.',
+        default: '2.0',
+        env: 'FXA_OAUTH_VERSION'
+      },
+      protocol: {
+        doc: 'OAuth authorization protocol used.',
+        default: 'oauth2',
+        env: 'FXA_OAUTH_AUTH_PROTOCOL'
+      },
+      authEndpoint: {
+        doc: 'Firefox Accounts OAuth authorization endpoint.',
+        default: 'https://oauth-latest.dev.lcip.org/v1/authorization',
+        env: 'FXA_OAUTH_AUTH_ENDPOINT'
+      },
+      tokenEndpoint: {
+        doc: 'Firefox Accounts OAuth token endpoint.',
+        default: 'https://oauth-latest.dev.lcip.org/v1/token',
+        env: 'FXA_OAUTH_TOKEN_ENDPOINT'
       }
     },
     session: {

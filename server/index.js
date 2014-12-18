@@ -41,11 +41,11 @@ server.register([require('hapi-auth-cookie'), require('bell')], function (err) {
   // bell init
   server.auth.strategy('oauth', 'bell', {
     provider: {
-      protocol: 'oauth2',
-      auth: 'TODO: the auth endpoint URI',
-      token: 'TODO: the access token endpoint URI',
-      version: '2.0',
-      scope: ['profile'], // or is it 'chronicle'?
+      protocol: config.get('server.oauth.protocol'),
+      auth: config.get('server.oauth.authEndpoint'),
+      token: config.get('server.oauth.tokenEndpoint'),
+      version: config.get('server.oauth.version'),
+      scope: config.get('server.oauth.scope'),
       /*jshint unused:false */
       profile: function (credentials, params, get, profileCb) {
         // TODO here's a guess at what to do in here, bell provides no example:
