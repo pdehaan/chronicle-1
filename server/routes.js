@@ -10,7 +10,11 @@ module.exports = [{
   method: 'GET',
   path: '/',
   config: {
-    auth: 'session',
+    auth: {
+      strategy: 'session',
+      mode: 'try'
+    },
+    plugins: { 'hapi-auth-cookie': { redirectTo: false } },
     handler: function (request, reply) {
       var page = request.auth.isAuthenticated ? 'app.html' : 'index.html';
       reply.file(page);
