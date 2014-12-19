@@ -16,7 +16,8 @@
     "mozlog": "1.0.0",
     "mysql": "2.5.3",
     "sequelize": "2.0.0-rc3",
-    "uuid": "2.0.1"
+    "uuid": "2.0.1",
+    "wreck": "5.1.0"
   },
   "devDependencies": {
     "grunt-autoprefixer": "2.0.0",
