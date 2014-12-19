@@ -25,22 +25,36 @@ module.exports = {
                 'fxa_id = VALUES(fxa_id), ' +
                 'email = VALUES(email), ' +
                 'oauth_token = VALUES(oauth_token)';
-    conn.query(query, [fxaId, email, oauthToken], function(err) {
+    pool.getConnection(function(err, conn) {
       if (err) {
-        log.warn('error saving user: ' + err);
-        // TODO send the item to a retry queue?
+        log.warn('error getting connection from pool: ' + err);
+        return cb(err);
       }
-      cb(err);
+      conn.query(query, [fxaId, email, oauthToken], function(err) {
+        if (err) {
+          log.warn('error saving user: ' + err);
+          // TODO send the item to a retry queue?
+        }
+        conn.release();
+        cb(err);
+      });
     });
   },
   getUserById: function(fxaId, cb) {
     var query = 'SELECT email, oauth_token FROM users WHERE fxa_id = ?';
-    conn.query(query, fxaId, function(err, result) {
+    pool.getConnection(function(err, conn) {
       if (err) {
-        log.warn('error retrieving user: ' + err);
+        log.warn('error getting connection from pool: ' + err);
+        return cb(err);
       }
-      cb(err, result);
-    })
+      conn.query(query, fxaId, function(err, result) {
+        if (err) {
+          log.warn('error retrieving user: ' + err);
+        }
+        conn.release();
+        cb(err, result);
+      });
+    });
   }
 };
 
