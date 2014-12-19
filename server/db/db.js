@@ -9,8 +9,8 @@ var config = require('../config');
 var buf = require('buf').hex;
 var log = require('../logger')('server.db');
 
-// TODO use connection pooling and/or attach this to the server
-var conn = mysql.createConnection({
+var pool = mysql.createPool({
+  connectionLimit: config.get('db.mysql.connectionLimit'),
   host: config.get('db.mysql.host'),
   user: config.get('db.mysql.user'),
   password: config.get('db.mysql.password')
@@ -28,9 +28,21 @@ module.exports = {
     conn.query(query, [fxaId, email, oauthToken], function(err) {
       if (err) {
         log.warn('error saving user: ' + err);
-        // TODO send the item to a retry queue
+        // TODO send the item to a retry queue?
       }
       cb(err);
     });
+  },
+  getUserById: function(fxaId, cb) {
+    var query = 'SELECT email, oauth_token FROM users WHERE fxa_id = ?';
+    conn.query(query, fxaId, function(err, result) {
+      if (err) {
+        log.warn('error retrieving user: ' + err);
+      }
+      cb(err, result);
+    })
   }
 };
+
+// TODO attach the pool to the hapi server
+// TODO on hapi shutdown, close the pool

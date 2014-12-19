@@ -44,6 +44,11 @@ var conf = convict({
       password: {
         default: '',
         env: 'MYSQL_PASSWORD'
+      },
+      connectionLimit: {
+        doc: 'Max number of MySQL workers in the pool.',
+        default: 25,
+        env: 'MYSQL_CONN_LIMIT'
       }
     },
     redis: {
