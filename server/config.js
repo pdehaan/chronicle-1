@@ -45,6 +45,11 @@ var conf = convict({
         default: '',
         env: 'MYSQL_PASSWORD'
       },
+      database: {
+        doc: 'Name of the database.',
+        default: 'chronicle',
+        env: 'MYSQL_DATABASE'
+      },
       connectionLimit: {
         doc: 'Max number of MySQL workers in the pool.',
         default: 25,

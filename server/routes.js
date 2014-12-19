@@ -83,7 +83,8 @@ module.exports = [{
               if (err) { log.info('profile server error: ' + err) }
               if (!payload) { log.info('profile server returned empty response') }
               log.info('profile server response: ' + payload);
-              db.createUser(payload.uid, payload.email, accessToken, function(err) {
+              var pay = JSON.parse(payload);
+              db.createUser(pay.uid, pay.email, accessToken, function(err) {
                 if (err) {
                   // TODO DB write failed, what to do?
                 }

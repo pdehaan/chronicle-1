@@ -24,7 +24,7 @@ function createDatabase(cb) {
   var createTableQuery = 'CREATE TABLE IF NOT EXISTS users (' +
     'fxa_id BINARY(16) NOT NULL PRIMARY KEY,' +
     'email VARCHAR(256) NOT NULL,' +
-    'oauth_token BINARY(32),' +  // can we assume this will be true? TODO
+    'oauth_token VARCHAR(256),' +
     'createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,' +
     'updatedAt TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,' +
     'INDEX (email)' +

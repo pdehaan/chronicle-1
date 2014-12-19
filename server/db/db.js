@@ -16,6 +16,22 @@ var pool = mysql.createPool({
   password: config.get('db.mysql.password')
 });
 
+function _getConn(cb) {
+  pool.getConnection(function(err, conn) {
+    if (err) {
+      log.warn('error getting connection from pool: ' + err);
+      return cb(err);
+    }
+    conn.query('USE ' + config.get('db.mysql.database'), function(err) {
+      if (err) {
+        log.warn('error USE-ing database: ' + err);
+        return cb(err);
+      }
+      cb(null, conn);
+    });
+  });
+};
+
 // DB API uses callbacks for the moment; TODO return promises?
 module.exports = {
   createUser: function(fxaId, email, oauthToken, cb) {
@@ -25,9 +41,9 @@ module.exports = {
                 'fxa_id = VALUES(fxa_id), ' +
                 'email = VALUES(email), ' +
                 'oauth_token = VALUES(oauth_token)';
-    pool.getConnection(function(err, conn) {
+    _getConn(function(err, conn) {
+      // TODO do we even want to handle pool connection errors here?
       if (err) {
-        log.warn('error getting connection from pool: ' + err);
         return cb(err);
       }
       conn.query(query, [fxaId, email, oauthToken], function(err) {
@@ -42,11 +58,8 @@ module.exports = {
   },
   getUserById: function(fxaId, cb) {
     var query = 'SELECT email, oauth_token FROM users WHERE fxa_id = ?';
-    pool.getConnection(function(err, conn) {
-      if (err) {
-        log.warn('error getting connection from pool: ' + err);
-        return cb(err);
-      }
+    _getConn(function(err, conn) {
+      // TODO handle conn err?
       conn.query(query, fxaId, function(err, result) {
         if (err) {
           log.warn('error retrieving user: ' + err);
