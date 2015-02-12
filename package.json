@@ -42,6 +42,7 @@
     "grunt-hapi": "0.8.1",
     "grunt-jscs": "1.1.0",
     "grunt-jsonlint": "1.0.4",
+    "grunt-newer": "1.1.0",
     "grunt-nsp-shrinkwrap": "0.0.3",
     "grunt-requirejs": "0.4.2",
     "grunt-rev": "0.1.0",
@@ -49,10 +50,10 @@
     "grunt-template": "0.2.3",
     "grunt-todo": "0.4.0",
     "grunt-usemin": "3.0.0",
+    "husky": "0.6.2",
     "intern": "2.2.2",
     "jshint-stylish": "1.0.0",
-    "load-grunt-tasks": "2.0.0",
-    "precommit-hook": "1.0.7"
+    "load-grunt-tasks": "2.0.0"
   },
   "engines": {
     "node": ">=0.10.33"
@@ -68,6 +69,8 @@
     "authors": "grunt contributors",
     "lint": "grunt lint",
     "outdated": "npm outdated --depth 0",
+    "precommit": "echo 'hey gurl'",
+    "prepush": "npm run lint",
     "postinstall": "bower update --config.interactive=false -s",
     "scss-lint": "scss-lint app/styles || true",
     "shrinkwrap": "npm shrinkwrap --dev && npm run validate-shrinkwrap",
